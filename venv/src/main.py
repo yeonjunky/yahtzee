@@ -20,9 +20,11 @@ class Yahtzee:
             "6": 0
         }
         self.upper_section = [0, 0, 0, 0, 0, 0]
+        self.upper_score = 0
         self.lower_section = [0, 0, 0, 0, 0, 0]
         self.roll_count = 0
-        self.is_start = False
+        self.round_count = 12
+        self.is_start = True
         self.player_command = ''
         self.commands = ['1', '2', '3', '4', '5', '6', 'reroll', 'exit']
 
@@ -53,38 +55,49 @@ class Yahtzee:
         for i in range(1, 7):
             print(f"{i} score:", self.nums_count[str(i)] * i)
 
-    def start_game(self):
-        self.is_start = True
-        while self.is_start:
-            self.new_turn()
-
     def get_player_command(self):
         self.player_command = input("")
+
+    def init_count(self):
+        self.nums_count = {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0
+        }
 
     def get_score(self):
         if self.player_command in self.commands:
             if self.player_command == '1' and self.upper_section[0] == 0:
                 self.score += self.nums_count["1"]
+                self.upper_score += self.nums_count["1"]
                 self.upper_section[0] = 1
 
             elif self.player_command == '2' and self.upper_section[1] == 0:
                 self.score += self.nums_count["2"] * 2
+                self.upper_score += self.nums_count["2"] * 2
                 self.upper_section[1] = 1
 
             elif self.player_command == '3' and self.upper_section[2] == 0:
                 self.score += self.nums_count["3"] * 3
+                self.upper_score += self.nums_count["3"] * 3
                 self.upper_section[2] = 1
 
             elif self.player_command == '4' and self.upper_section[3] == 0:
                 self.score += self.nums_count["4"] * 4
+                self.upper_score += self.nums_count["4"] * 4
                 self.upper_section[3] = 1
 
             elif self.player_command == '5' and self.upper_section[4] == 0:
                 self.score += self.nums_count["5"] * 5
+                self.upper_score += self.nums_count["5"] * 5
                 self.upper_section[4] = 1
 
             elif self.player_command == '6' and self.upper_section[5] == 0:
                 self.score += self.nums_count["6"] * 6
+                self.upper_score += self.nums_count["6"] * 6
                 self.upper_section[5] = 1
 
             elif self.player_command == 'reroll':
@@ -96,12 +109,20 @@ class Yahtzee:
         else:
             print('wrong command! type again')
 
+    def check_bonus_score(self):
+        if self.upper_score > 63:
+            print("bonus score!")
+            self.score += 35
+        else:
+            pass
+
     def show_score(self):
         print("current score: ", self.score)
 
     def reroll(self):
         if self.roll_count < 2:
             self.roll_count += 1
+            self.init_count()
             self.roll()
             self.print_dices()
             self.check_same_num()
@@ -113,8 +134,11 @@ class Yahtzee:
             self.get_player_command()
             self.get_score()
 
-
     def new_turn(self):
+        self.round_count += 1
+        print("Round:", self.round_count)
+        self.check_bonus_score()
+        self.init_count()
         self.roll()
         self.print_dices()
         self.check_same_num()
@@ -125,6 +149,9 @@ class Yahtzee:
 
 
 ya = Yahtzee()
-ya.start_game()
-# ya.new_turn()
-# print(ya.nums_count)
+while True:
+    if ya.round_count == 13:
+        print("game end")
+        break
+    ya.new_turn()
+
