@@ -23,6 +23,7 @@ class Yahtzee:
         self.upper_section = [0, 0, 0, 0, 0, 0]
         self.upper_score = 0
         self.lower_section = [0, 0, 0, 0, 0, 0, 0]
+        # self.lower_section_score = [self.sum, 25, 30, 40, 50]
         self.lower_section_score = [0, 0, 0, 0, 0, 0, 0]
         self.roll_count = 0
         self.round_count = 0
@@ -37,9 +38,6 @@ class Yahtzee:
     def init_sum(self):
         self.sum = 0
 
-    def init_lower_score(self):
-        self.lower_section_score = [0, 0, 0, 0, 0, 0, 0]
-
     def init_count(self):
         self.nums_count = {
             "1": 0,
@@ -52,7 +50,7 @@ class Yahtzee:
 
     def dice_sum(self):
         self.init_sum()
-        for i in nums:
+        for i in self.nums:
             self.sum += i
 
     def check_same_num(self):
@@ -85,13 +83,13 @@ class Yahtzee:
 
     def show_lower_section(self):
         print("-------------lower section-------------\n")
-        print("Three of a kind:", self.lower_section_score[0], '\n',
-              "Four of a kind:", self.lower_section_score[1], '\n',
-              "Full house:", self.lower_section_score[2], '\n',
-              "Small straight:", self.lower_section_score[3], '\n',
-              "Large straight:", self.lower_section_score[4], '\n',
-              "Chance:", self.lower_section_score[5], '\n',
-              "Yahtzee:", self.lower_section_score[6], '\n'
+        print("Three of a kind:", self.lower_section_score[0], '\n' +
+              "Four of a kind:", self.lower_section_score[0], '\n' +
+              "Full house:", self.lower_section_score[1], '\n' +
+              "Small straight:", self.lower_section_score[2], '\n' +
+              "Large straight:", self.lower_section_score[3], '\n' +
+              "Chance:", self.lower_section_score[0], '\n' +
+              "Yahtzee:", self.lower_section_score[4], '\n'
               )
 
     def show_score(self):
@@ -104,7 +102,7 @@ class Yahtzee:
         if self.player_command in self.commands:
             if self.player_command == '1':
                 if self.upper_section[0]:
-                    print("already get ace score")
+                    print("already got ace score")
                     self.show_dice()
                 else:
                     self.score += self.nums_count["1"]
@@ -113,7 +111,7 @@ class Yahtzee:
 
             elif self.player_command == '2':
                 if self.upper_section[1]:
-                    print("already get twos score")
+                    print("already got twos score")
                     self.show_dice()
                 else:
                     self.score += self.nums_count["2"] * 2
@@ -122,7 +120,7 @@ class Yahtzee:
 
             elif self.player_command == '3':
                 if self.upper_section[2]:
-                    print("already get threes score")
+                    print("already got threes score")
                     self.show_dice()
                 else:
                     self.score += self.nums_count["3"] * 3
@@ -131,7 +129,7 @@ class Yahtzee:
 
             elif self.player_command == '4':
                 if self.upper_section[3]:
-                    print("already get fours score")
+                    print("already got fours score")
                     self.show_dice()
                 else:
                     self.score += self.nums_count["4"] * 4
@@ -140,7 +138,7 @@ class Yahtzee:
 
             elif self.player_command == '5':
                 if self.upper_section[4]:
-                    print("already get fives score")
+                    print("already got fives score")
                     self.show_dice()
                 else:
                     self.score += self.nums_count["5"] * 5
@@ -155,6 +153,32 @@ class Yahtzee:
                     self.score += self.nums_count["6"] * 6
                     self.upper_score += self.nums_count["6"] * 6
                     self.upper_section[5] = 1
+
+            elif self.player_command == 'three':
+                if self.lower_section[0]:
+                    print("already get sixes score")
+                    self.show_dice()
+                else:
+                    self.score += self.lower_section_score[0]
+                    self.lower_section[0] = 1
+
+            elif self.player_command == 'four':
+                pass
+
+            elif self.player_command == 'full':
+                pass
+
+            elif self.player_command == 'small':
+                pass
+
+            elif self.player_command == 'large':
+                pass
+
+            elif self.player_command == 'chance':
+                pass
+
+            elif self.player_command == 'yahtzee':
+                pass
 
             elif self.player_command == 'reroll':
                 self.reroll()
@@ -172,11 +196,19 @@ class Yahtzee:
         else:
             pass
 
+    def check_lower_score(self):
+        if 3 in self.nums_count:
+            self.lower_section_score[0] = self.sum
+            # print("asdffdas")
+
+        pass
+
     def reroll(self):
         if self.roll_count < 2:
             self.roll_count += 1
             self.init_count()
             self.roll()
+
             self.print_dices()
             self.check_same_num()
             self.show_upper_section()
@@ -188,13 +220,18 @@ class Yahtzee:
             self.get_score()
 
     def new_turn(self):
+        self.roll_count = 0
         self.round_count += 1
+
         print("Round:", self.round_count)
         self.check_bonus_score()
         self.init_count()
         self.roll()
+        self.dice_sum()
+        print('sum:', self.sum)
         self.print_dices()
         self.check_same_num()
+        self.check_lower_score()
         self.show_upper_section()
         self.show_lower_section()
         self.get_player_command()
