@@ -6,11 +6,11 @@ def quit_game():
     sys.exit()
 
 
-def remove_same_element(num_list):
+def remove_same_element(dict_val):
     return_list = []
-    for i in range(0, len(num_list)):
-        if num_list[i] not in return_list:
-            return_list.appenc(num_list[i])
+    for i in range(0, len(list(dict_val))):
+        if list(dict_val)[i] not in return_list:
+            return_list.append(list(dict_val)[i])
     return return_list
 
 
@@ -242,16 +242,16 @@ class Yahtzee:
         if 4 in self.nums_count.values():
             self.lower_section_score[1] = self.sum
 
-        if 2 and 3 in self.nums_count.values():
+        if 2 in self.nums_count.values() and 3 in self.nums_count.values():
             self.lower_section_score[2] = 25
 
-        if [1, 2, 3, 4] or [2, 3, 4, 5] or [3, 4, 5, 6] in self.nums_count.values():
+        if len(remove_same_element(self.nums_count.values())) == 4 or len(remove_same_element(self.nums_count.values())) == 5:
             self.lower_section_score[3] = 30
 
-        if [1, 2, 3, 4, 5] or [2, 3, 4, 5, 6] in self.nums_count.values():
+        if len(remove_same_element(self.nums_count.values())) == 5:
             self.lower_section_score[4] = 40
 
-        # TODO: chance
+        self.lower_section_score[5] = self.sum
 
         if 5 in self.nums_count.values():
             self.lower_section_score[6] = 50
