@@ -6,6 +6,14 @@ def quit_game():
     sys.exit()
 
 
+def remove_same_element(num_list):
+    return_list = []
+    for i in range(0, len(num_list)):
+        if num_list[i] not in return_list:
+            return_list.appenc(num_list[i])
+    return return_list
+
+
 class Yahtzee:
 
     def __init__(self):
@@ -23,13 +31,13 @@ class Yahtzee:
         self.upper_section = [0, 0, 0, 0, 0, 0]
         self.upper_score = 0
         self.lower_section = [0, 0, 0, 0, 0, 0, 0]
-        # self.lower_section_score = [self.sum, 25, 30, 40, 50]
         self.lower_section_score = [0, 0, 0, 0, 0, 0, 0]
         self.roll_count = 0
         self.round_count = 0
         self.is_start = True
         self.player_command = ''
-        self.commands = ['1', '2', '3', '4', '5', '6', 'three', 'four', 'full', 'small', 'large', 'chance', 'yahtzee', 'reroll', 'exit']
+        self.commands = ['1', '2', '3', '4', '5', '6', 'three', 'four', 'full', 'small', 'large', 'chance', 'yahtzee',
+                         'reroll', 'exit']
 
     def roll(self):
         for i in range(0, 5):
@@ -70,7 +78,7 @@ class Yahtzee:
 
     def check_lower_section(self):
         if 3 in self.nums_count:
-            # self.lower_section_score[0] =
+            self.lower_section_score[0] = 25
             pass
 
     def print_dices(self):
@@ -156,29 +164,59 @@ class Yahtzee:
 
             elif self.player_command == 'three':
                 if self.lower_section[0]:
-                    print("already get sixes score")
+                    print("already get three of a kind score")
                     self.show_dice()
                 else:
                     self.score += self.lower_section_score[0]
                     self.lower_section[0] = 1
 
             elif self.player_command == 'four':
-                pass
+                if self.lower_section[1]:
+                    print("already get four of a kind")
+                    self.show_dice()
+                else:
+                    self.score += self.lower_section_score[1]
+                    self.lower_section[1] = 1
 
             elif self.player_command == 'full':
-                pass
+                if self.lower_section[2]:
+                    print("already get four of a kind")
+                    self.show_dice()
+                else:
+                    self.score += self.lower_section_score[2]
+                    self.lower_section[2] = 1
 
             elif self.player_command == 'small':
-                pass
+                if self.lower_section[3]:
+                    print("already get small straight score")
+                    self.show_dice()
+                else:
+                    self.score += self.lower_section_score[3]
+                    self.lower_section[3] = 1
 
             elif self.player_command == 'large':
-                pass
+                if self.lower_section[4]:
+                    print("already get large straight score")
+                    self.show_dice()
+                else:
+                    self.score += self.lower_section_score[4]
+                    self.lower_section[4] = 1
 
             elif self.player_command == 'chance':
-                pass
+                if self.lower_section[5]:
+                    print("already get chance score")
+                    self.show_dice()
+                else:
+                    self.score += self.lower_section_score[5]
+                    self.lower_section[5] = 1
 
             elif self.player_command == 'yahtzee':
-                pass
+                if self.lower_section[6]:
+                    print("already get yahtzee score")
+                    self.show_dice()
+                else:
+                    self.score += self.lower_section_score[6]
+                    self.lower_section[6] = 1
 
             elif self.player_command == 'reroll':
                 self.reroll()
@@ -201,7 +239,22 @@ class Yahtzee:
         if 3 in self.nums_count.values():
             self.lower_section_score[0] = self.sum
 
-        pass
+        if 4 in self.nums_count.values():
+            self.lower_section_score[1] = self.sum
+
+        if 2 and 3 in self.nums_count.values():
+            self.lower_section_score[2] = 25
+
+        if [1, 2, 3, 4] or [2, 3, 4, 5] or [3, 4, 5, 6] in self.nums_count.values():
+            self.lower_section_score[3] = 30
+
+        if [1, 2, 3, 4, 5] or [2, 3, 4, 5, 6] in self.nums_count.values():
+            self.lower_section_score[4] = 40
+
+        # TODO: chance
+
+        if 5 in self.nums_count.values():
+            self.lower_section_score[6] = 50
 
     def reroll(self):
         if self.roll_count < 2:
@@ -253,4 +306,3 @@ while True:
         print("game end")
         break
     ya.new_turn()
-
